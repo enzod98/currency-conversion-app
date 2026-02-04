@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="Minimal_API_REST/Currency.csproj" />
+  <Project Path="Application/Application.csproj" />
+  <Project Path="Domain/Domain.csproj" />
+  <Project Path="Infrastructure/Infrastructure.csproj" />
+  <Project Path="Currency.API/Currency.API.csproj" />
 </Solution>

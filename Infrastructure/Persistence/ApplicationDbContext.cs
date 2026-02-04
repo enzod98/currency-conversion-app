@@ -4,7 +4,7 @@ using Domain.Currencies;
 using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persistance;
+namespace Infrastructure.Persistence;
 
 public class ApplicationDbContext : DbContext
 {
@@ -15,7 +15,6 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
         
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
@@ -32,7 +31,7 @@ public class ApplicationDbContext : DbContext
             .IsUnique();
 
 
-        // Hacemos autoincremental el Id de las entidades heredadas de Entity
+        // Para autoincrementar el Id de todas las entidade que heredan de Entity
         foreach (var entityType in  modelBuilder.Model.GetEntityTypes())
             if (typeof(Entity).IsAssignableFrom(entityType.ClrType) && !entityType.ClrType.IsAbstract)
                 modelBuilder.Entity(entityType.ClrType, builder =>
@@ -41,5 +40,8 @@ public class ApplicationDbContext : DbContext
                     builder.Property("Id")
                             .ValueGeneratedOnAdd();
                 });
+        
+        base.OnModelCreating(modelBuilder);
+
     }
 }
