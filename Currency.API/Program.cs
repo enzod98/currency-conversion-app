@@ -3,7 +3,7 @@ using Currency.API.Endpoints;
 using Currency.API.Middlewares;
 using Infrastructure;
 using Infrastructure.Persistence;
-using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +20,30 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API Prueba Técnica"
     });
+
+    c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    {
+        Description = "Api Key en el header X-API-KEY",
+        Type = SecuritySchemeType.ApiKey,
+        Name = "X-API-KEY",
+        In = ParameterLocation.Header,
+        Scheme = "ApiKeyScheme"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "ApiKey"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
 
@@ -32,6 +56,8 @@ var app = builder.Build();
 await DbInitializer.ApplyMigrations(app.Services);
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ApiKeyMiddleware>();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
