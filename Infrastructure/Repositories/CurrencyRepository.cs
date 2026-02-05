@@ -28,4 +28,9 @@ public class CurrencyRepository : ICurrencyRepository
     {
         return await _context.Currencies.ToListAsync();
     }
+
+    public async Task<Currency?> GetCurrencyByCodeAsync(string code)
+    {
+        return _context.Currencies.Where(c => c.Code.Equals(code)).FirstOrDefault();
+    }
 }

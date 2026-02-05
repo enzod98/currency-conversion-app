@@ -1,5 +1,6 @@
 ﻿using Application.Currencies.Commands.CreateCurrency;
 using Application.Currencies.Queries.GetCurrencies;
+using Application.CurrencyConversion.Commands;
 using MediatR;
 
 namespace Currency.API.Endpoints;
@@ -25,6 +26,15 @@ public static class CurrencyEndpoints
             var result = await sender.Send(command);
             if (result.IsSuccessful)
                 return Results.Created($"/currencies/{result.Value.Id}", result);
+
+            return Results.BadRequest(result);
+        });
+
+        app.MapPost("/currency/convert", async (ConversionCommand command, ISender sender) =>
+        {
+            var result = await sender.Send(command);
+            if (result.IsSuccessful)
+                return Results.Ok(result);
 
             return Results.BadRequest(result);
         });
