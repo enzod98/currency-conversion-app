@@ -1,4 +1,8 @@
 ﻿using Domain.Abstractions;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Text.Json;
 
@@ -31,13 +35,34 @@ public class ExceptionHandlingMiddleware
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-        var result = Result.Fail($"Error no controlado: { exception.Message }");
+        var statusCode = HttpStatusCode.InternalServerError;
+        string message = string.Empty;
 
-        var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-        var json = JsonSerializer.Serialize(result, options);
+        if (exception is ValidationException validationException)
+        {
+            statusCode = HttpStatusCode.BadRequest;
+            var errors = validationException.Errors
+                .Select(e => $"{e.PropertyName}: {e.ErrorMessage}");
 
-        return context.Response.WriteAsync(json);
+            message = string.Join(" | ", errors);
+        }
+        else if (exception is DbUpdateException dbUpdateException && dbUpdateException.InnerException is SqliteException sqliteException)
+        {
+            if (sqliteException.SqliteErrorCode == 19)
+            {
+                statusCode = HttpStatusCode.Conflict;
+                message = "Ya existe un registro con estos datos.";
+            }
+        }
+        else
+        {
+            message = "Ha ocurrido un error inesperado.";
+        }
+
+        context.Response.StatusCode = (int)statusCode;
+
+        var result = Result.Fail(message);
+        return context.Response.WriteAsJsonAsync(result);
     }
 }

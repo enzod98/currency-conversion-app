@@ -1,6 +1,4 @@
-﻿using Application.Abstractions.RequestHandling;
-using Domain.Abstractions;
-using Domain.Users;
+﻿using Domain.Users;
 
 namespace Application.Users.Commands.CreateUser;
 
