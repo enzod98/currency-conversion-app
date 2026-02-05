@@ -1,4 +1,5 @@
 ﻿using Application.Users.Commands.CreateUser;
+using Application.Users.Commands.DeleteUser;
 using Application.Users.Commands.UpdateUser;
 using Application.Users.Queries.GetUserById;
 using Application.Users.Queries.GetUsers;
@@ -33,6 +34,19 @@ public static class UserEndpoints
             var result = await sender.Send(query);
 
             return result.Value is null ? Results.NotFound(result) : Results.Ok(result);
+
+        });
+
+        group.MapDelete("/{id:int}", async (int id, ISender sender) =>
+        {
+            var query = new DeleteUserCommand()
+            {
+                Id = id
+            };
+
+            var result = await sender.Send(query);
+
+            return result.IsSuccessful ? Results.Ok(result) : Results.InternalServerError(result) ;
 
         });
 
