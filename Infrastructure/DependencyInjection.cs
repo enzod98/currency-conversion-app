@@ -1,4 +1,5 @@
-﻿using Domain.Users;
+﻿using Domain.Addresses;
+using Domain.Users;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ public static class DependencyInjection
             options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
+
         return services;
     }
 }

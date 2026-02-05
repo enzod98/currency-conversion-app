@@ -30,5 +30,6 @@ app.UseHttpsRedirection();
 var apiGroup = app.MapGroup("/api");
 
 apiGroup.MapUserEndpoints();
+apiGroup.MapAddressEndpoints();
 
 app.Run();

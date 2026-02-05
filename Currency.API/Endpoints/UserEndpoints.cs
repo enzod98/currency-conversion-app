@@ -1,4 +1,6 @@
-﻿using Application.Users.Commands.CreateUser;
+﻿using Application.Addresses.Commands.CreateAddress;
+using Application.Addresses.Queries.GetAddressesByUserId;
+using Application.Users.Commands.CreateUser;
 using Application.Users.Commands.DeleteUser;
 using Application.Users.Commands.UpdateUser;
 using Application.Users.Queries.GetUserById;
@@ -70,5 +72,31 @@ public static class UserEndpoints
 
             return Results.BadRequest(result);
         });
+
+
+        group.MapGet("/{id:int}/addresses", async (int id, ISender sender) =>
+        {
+            var query = new GetAddressesByUserIdQuery()
+            {
+                UserId = id
+            };
+
+            var result = await sender.Send(query);
+
+            return result.Value is null ? Results.NotFound(result) : Results.Ok(result);
+
+        });
+
+        group.MapPost("/{id:int}/addresses", async (int id, CreateAddressCommand command, ISender sender) =>
+        {
+            command.UserId = id;
+
+            var result = await sender.Send(command);
+            if (result.IsSuccessful)
+                return Results.Created($"/users/{result.Value.UserId}/addresses", result);
+
+            return Results.NotFound(result);
+        });
+
     }
 }
