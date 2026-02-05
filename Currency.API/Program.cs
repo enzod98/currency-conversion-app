@@ -31,5 +31,6 @@ var apiGroup = app.MapGroup("/api");
 
 apiGroup.MapUserEndpoints();
 apiGroup.MapAddressEndpoints();
+apiGroup.MapCurrencyEndpoints();
 
 app.Run();

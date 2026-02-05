@@ -1,4 +1,5 @@
 ﻿using Domain.Addresses;
+using Domain.Currencies;
 using Domain.Users;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
@@ -18,6 +19,7 @@ public static class DependencyInjection
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<ICurrencyRepository, CurrencyRepository>();
 
         return services;
     }

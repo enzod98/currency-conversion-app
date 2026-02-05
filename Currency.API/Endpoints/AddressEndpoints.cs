@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Currency.API.Endpoints;
 
-public static class AddressEndpoint
+public static class AddressEndpoints
 {
     public static void MapAddressEndpoints(this IEndpointRouteBuilder app)
     {
