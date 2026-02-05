@@ -8,13 +8,19 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
 {
     public ApplicationDbContext CreateDbContext(string[] args)
     {
+        string apiPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../Currency.API"));
+
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../Currency.API"))
-            .AddJsonFile("appsettings.json")
-            .Build();
+                    .SetBasePath(apiPath)
+                    .AddJsonFile("appsettings.json")
+                    .Build();
 
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+        var dbName = connectionString.Split('=').Last();
+        var dbFullPath = Path.Combine(apiPath, dbName);
+        connectionString = $"Data Source={dbFullPath}";
 
         optionsBuilder.UseSqlite(connectionString, b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
 

@@ -1,7 +1,4 @@
-﻿using Domain.Abstractions;
-using MediatR;
-
-namespace Application.Abstractions.RequestHandling;
+﻿namespace Application.Abstractions.RequestHandling;
 
 public interface ICommand : IRequest<Result>
 {
