@@ -70,7 +70,7 @@ Características implementadas
 La API incluye una interfaz de Swagger para facilitar las pruebas de los endpoints.
 
 1. Inicie la aplicación.
-2. Navegue a: `https://localhost:XXXX/swagger` (el puerto se indica en la consola).
+2. Navegue a: `http://localhost:XXXX/swagger` (el puerto se indica en la consola).
 3. Haga clic en el botón **Authorize**.
 4. Ingrese el valor de la API Key por defecto: `Prueba_Tecnica_Enzo_Dure`.
 
